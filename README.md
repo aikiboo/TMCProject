@@ -43,9 +43,9 @@ On modifie également le fichier /etc/exports en ajoutant à la fin les lignes:
 Puis on active et relance nos services.
 
 ```
-sudo systemctl enable nfs-kernel-server
-sudo systemctl enable rpcbind
-sudo systemctl restart nfs-kernel-server
+	$ sudo systemctl enable nfs-kernel-server
+	$ sudo systemctl enable rpcbind
+	$ sudo systemctl restart nfs-kernel-server
 ```
 
 On récupère ensuite le nom de notre interface réseau Ethernet.
