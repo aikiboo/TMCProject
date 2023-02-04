@@ -61,6 +61,23 @@ On modifie aussi le fichier cmdline.txt :
 console=serial0,115200 console=tty1 root=/dev/nfs nfsroot=10.20.30.1:/home/florian/TMCProject/RASPI/client,tcp,vers=3 rw ip=dhcp rootwait
 ```
 
+Puis le fichier /client/etc/fstab:
+```
+proc /proc proc defaults 0 0
+10.20.30.1:/home/florian/TMCProject/RASPI/boot /boot nfs defaults,vers=3 0 0
+```
+
+Puis on édit le fichier /client/lib/system/sshswitch.service afin qu'il ressemble à ça :
+```
+[Unit]
+Description=Turn on SSH if /boot/ssh is present
+After=regenerate_ssh_host_keys.service
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c "systemctl enable --now ssh"
+[Install]
+WantedBy=multi-user.target
+```
 </p>
 </details>
 
