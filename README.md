@@ -48,7 +48,11 @@ Puis on active et relance nos services.
 	$ sudo systemctl restart nfs-kernel-server
 ```
 
-On récupère ensuite le nom de notre interface réseau Ethernet.
+On récupère ensuite le nom de notre interface réseau Ethernet grâce à la commande:
+```
+	$ ip a
+```
+
 
 
 </p>
