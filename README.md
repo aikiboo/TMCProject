@@ -6,7 +6,7 @@ Les fichiers des rapberry sont hébergés et utilisés depuis un ordinateur hote
 <details><summary>Installation de l'host</summary>
 <p>
 
-Afin de commencer l'installation de l'host nous allons créer notre répertoire ainsi que télécharger, et monter l'OS de notre raspberry. 
+Afin de commencer l'installation de l'host nous allons créer notre répertoire ainsi que télécharger, et monter l'OS de notre raspberry. Ici notre path sera /home/florian/TMCProject/RASPI, il faut donc l'adapter à notre situation.  
 
 ```
 	$ mkdir RASPI
@@ -14,7 +14,7 @@ Afin de commencer l'installation de l'host nous allons créer notre répertoire 
 	$ mkdir client
 	$ mkdir boot
 	$ wget https://downloads.raspberrypi.org/raspios_lite_arm64/images/raspios_lite_arm64-2022-09-26/2022-09-22-raspios-bullseye-arm64-lite.img.xz
-	$ tar -xJf 2022-09-22-raspios-bullseye-arm64-lite.img.xz
+	$ unxz 2022-09-22-raspios-bullseye-arm64-lite.img.xz
 	$ sudo losetup -fP 2022-09-22-raspios-bullseye-arm64-lite.img
 	$ losetup -a | grep rasp
 ```
@@ -27,6 +27,7 @@ Suite à cette commande on récupère le numéro du loop correspondant à notre 
 	$ sudo umount /mnt
 	$ sudo mount /dev/loopXp1 /mnt
 	$ cp -r /mnt/* boot/
+	$ sudo umount /mnt
 ```
 
 Nos systèmes de fichiers sont désormais presque prêt pour démarrer notre raspberry, il reste cependant la configuration à faire. Pour ce faire nous allons devoir activer le NFS.
@@ -36,8 +37,8 @@ Nos systèmes de fichiers sont désormais presque prêt pour démarrer notre ras
 
 On modifie également le fichier /etc/exports en ajoutant à la fin les lignes:
 ```
-/home/florian/RASPI/client *(rw,sync,no_subtree_check,no_root_squash)
-/home/florian/RASPI/boot *(rw,sync,no_subtree_check,no_root_squash
+/home/florian/TMCProject/RASPI/client *(rw,sync,no_subtree_check,no_root_squash)
+/home/florian/TMCProject/RASPI/boot *(rw,sync,no_subtree_check,no_root_squash
 ``` 
 
 Puis on active et relance nos services.
@@ -53,7 +54,12 @@ On récupère ensuite le nom de notre interface réseau Ethernet grâce à la co
 	$ ip a
 ```
 
+On remplacera donc le nom de l'interface par celle-ci dans le script "script_boot_rpi".  On pensera aussi à y modifier le path dans la dernière ligne du script.
 
+On modifie aussi le fichier cmdline.txt :
+```
+console=serial0,115200 console=tty1 root=/dev/nfs nfsroot=10.20.30.1:/home/florian/TMCProject/RASPI/client,tcp,vers=3 rw ip=dhcp rootwait
+```
 
 </p>
 </details>
