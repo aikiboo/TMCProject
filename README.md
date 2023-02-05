@@ -67,7 +67,7 @@ proc /proc proc defaults 0 0
 10.20.30.1:/home/florian/TMCProject/RASPI/boot /boot nfs defaults,vers=3 0 0
 ```
 
-Puis on édit le fichier /client/lib/system/sshswitch.service afin qu'il ressemble à ça :
+Puis on édit le fichier /client/lib/systemd/system/sshswitch.service afin qu'il ressemble à ça :
 ```
 [Unit]
 Description=Turn on SSH if /boot/ssh is present
@@ -78,9 +78,16 @@ ExecStart=/bin/sh -c "systemctl enable --now ssh"
 [Install]
 WantedBy=multi-user.target
 ```
+
+Il ne reste donc plu-qu’à démarrer le script et nous connecter à notre raspberry.
 </p>
 </details>
 
+<details><summary>Mise en place des communications LoRa</summary>
+<p>
+
+</p>
+</details>
 
 
 
