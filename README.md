@@ -1,5 +1,5 @@
 # TMCProject
-Un projet d' IoT. Deux raspberry communiquent entre eux par LoRa, communication chiffrée par AES.
+Un projet d' IoT. Deux raspberrys communiquent entre eux par LoRa, communication chiffrée par AES.
 Les fichiers des rapberry sont hébergés et utilisés depuis un ordinateur hote par connection ethernet.
 
 
@@ -85,8 +85,32 @@ Il ne reste donc plu-qu’à démarrer le script et nous connecter à notre rasp
 
 <details><summary>Mise en place des communications LoRa</summary>
 <p>
-
+Afin de faire communiquer nos deux raspberrys nous allons utiliser le LoRa et plus précisément la bibliothèque RadioHead qui nécessite elle même la bibliothèque bcm2835. Mais avant de les installer nous devons activer le bus PCI utilisé par le composant LoRa.
+Pour cela nous avons juste à éditer le fichier /RASPI/boot/config.txt
+en modifiant les lignes de la façon suivante : 
+```
+	# Uncomment some or all of these to enable the optional hardware interfaces
+	#dtparam=i2c_arm=on
+	#dtparam=i2s=on
+	dtparam=spi=on
+	dtoverlay=gpio-no-irq
+``` 
 </p>
+
+Nous installons ensuite nos bibliothèques:
+```
+	$ wget http://www.airspayce.com/mikem/bcm2835/bcm2835-1.71.tar.gz
+	$ tar zxvf bcm2835-1.71.tar.gz
+	$ cd bcm2835-1.71
+	$ ./configure
+	$ make
+	$ sudo make check
+	$ sudo make instal
+	$ cd ..
+	$ git clone https://github.com/hallard/RadioHead
+```
+
+
 </details>
 
 
