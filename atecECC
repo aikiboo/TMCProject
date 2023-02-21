@@ -1,0 +1,11 @@
+openssl rand -hex 32 > slot4.key
+
+
+
+sudo mos -X atca-set-key 4 slot4.key --dry-run=false
+
+sudo mos -X atca-set-key 0 client/home/pi/CA_ECC/ecc.esp.key.pem --write-key=slot4.key --dry-run=false
+
+
+sudo cp client/home/pi/CA_ECC/ecc.esp.pem my-app/fs/ecc.crt.pem
+sudo cp client/home/pi/CA_ECC/ecc.ca.cert.pem my-app/fs/server_ca.pem

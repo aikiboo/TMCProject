@@ -1,0 +1,14 @@
+#!/bin/bash
+
+function ctrl_c() {
+  # sudo iptables -t nat -D OUTPUT -d 127.0.0.53 -p udp --dport 53 -m string --hex-string "|03|www|06|unilim|02|fr" --algo bm -j DNAT --to-destination 10.53.53.53
+  sudo iptables -t nat -D OUTPUT -p udp --dport 53 -m string --hex-string "|07|serveur|03|iot|03|com" --algo bm -j DNAT --to-destination 10.53.53.53
+  sudo ip l del fordns
+}
+  sudo ip l add fordns type dummy
+  sudo ip l set fordns up
+  sudo ip a add 10.53.53.53/24 dev fordns
+  sudo dnsmasq -d -z -i fordns -A /serveur.iot.com/127.0.0.1 &
+  # sudo iptables -t nat -A OUTPUT -d 127.0.0.53 -p udp --dport 53 -m string --hex-string "|03|www|06|unilim|02|fr" --algo bm -j DNAT --to-destination 10.53.53.53
+  sudo iptables -t nat -A OUTPUT -p udp --dport 53 -m string --hex-string "|07|serveur|03|iot|03|com" --algo bm -j DNAT --to-destination 10.53.53.53
+  trap ctrl_c INT

@@ -110,8 +110,50 @@ Nous installons ensuite nos bibliothèques:
 	$ git clone https://github.com/hallard/RadioHead
 ```
 
+Puis nous allons copier nos l'un des deux programmes rf95_server.cpp et rf_95_client.cpp dans le répertoire RadioHead/exemples/raspi/rf95. Le programme lié au serveur pour le Raspberry lié au serveur et inversement.
 
 </details>
 
+<details><summary>Mise en place du serveur mosquitto</summary>
+
+Sur le Raspberry lié au client LoRa précédemment configuré nous allons devoir installer mosquitto:
+```
+	$ sudo apt-get install mosquitto
+	$ sudo apt-get install mosquitto-clients
+``` 
+Puis nous éditerons le fichier /etc/mosquitto/mosquito.conf pour le transformer en : 
+```
+# Place your local configuration in /etc/mosquitto/conf.d/
+#
+# A full description of the configuration file is at
+# /usr/share/doc/mosquitto/examples/mosquitto.conf.example
+
+pid_file /run/mosquitto/mosquitto.pid
+
+persistence true
+persistence_location /var/lib/mosquitto/
+
+#log_dest file /var/log/mosquitto/mosquitto.log
+
+include_dir /etc/mosquitto/conf.d
+
+allow_anonymous false
+password_file /etc/mosquitto/mosquitto_passwd
+```
+Nous allons par la suite créer un utilisateur ici "esp" avec pour mot de passe "tmctmctmc":
+```
+ 	$ sudo mosquitto_passwd -c /etc/mosquitto/mosquitto_passwd esp
+```
+
+Puis nous copions les fichiers tcp.conf et tls.conf fournit dans le git dans le répertoire /etc/mosquitto/conf.d/
+
+Une fois cela fait nous démarrons le service mosquitto :
+```
+	$ sudo systemctl enable mosquitto.service
+	$ sudo systemctl start mosquitto.service
+```
+
+Le serveur mis en place il nous reste donc à configurer nos certificats pour cela nous allons juste à exécuter le script genCertif, préalablement placé dans le répertoire /client/home/pi/CA_ECC/
+</details>
 
 
