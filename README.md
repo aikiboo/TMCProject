@@ -147,13 +147,55 @@ Nous allons par la suite créer un utilisateur ici "esp" avec pour mot de passe 
 
 Puis nous copions les fichiers tcp.conf et tls.conf fournit dans le git dans le répertoire /etc/mosquitto/conf.d/
 
+Le serveur mis en place il nous reste donc à configurer nos certificats pour cela nous allons juste à exécuter le script genCertif, préalablement placé dans le répertoire /client/home/pi/CA_ECC/
+
 Une fois cela fait nous démarrons le service mosquitto :
 ```
 	$ sudo systemctl enable mosquitto.service
 	$ sudo systemctl start mosquitto.service
 ```
+En cas de problème de connexion il faudra exécuter le script setupRedirect depuis le Raspberry.
+</details>
+<details><summary>Mise en place de l'ESP</summary>
+Pour commencer à mettre en place l'ESP nous allons premièrement installer mongoose-os et docker.io
 
-Le serveur mis en place il nous reste donc à configurer nos certificats pour cela nous allons juste à exécuter le script genCertif, préalablement placé dans le répertoire /client/home/pi/CA_ECC/
+```
+	$ sudo add-apt-repository ppa:mongoose-os/mos
+	$ sudo apt update
+	$ sudo apt install mos_latest
+	$ mos --help
+	$ sudo apt install docker.io
+	$ sudo groupadd docker
+	$ sudo usermod -aG docker $USER
+``` 
+
+Nous exécutons donc le script atecECC, nous sommes toujours dans le répertoire /TMCProject/.
+Notre esp est donc prêt a être utilisé. 
+Nous devons vérifier et corriger si ce n'est pas le cas que notre certificat client est bien sous le format 
+```
+-----BEGIN CERTIFICATE-----
+...
+-----END CERTIFICATE----
+```  
+</details>
+<details><summary>Lancement du projet</summary>
+Pour pouvoir lancer et démarrer notre projet nous devons commencer à installer 2 hôtes comme expliquer en partie 1.
+Sur la machine du serveur LoRa nous allons juste démarrer le script "script_boot_rpi" , puis nous connecter en ssh sur le Raspberry, installer notre serveur LoRa comme indiqué en partie 2. et exécuter la commande suivante dans le répertoire /RadioHead/exemples/raspi/rf95/
+```
+	$ make rf95_server && sudo ./rf95_server
+```
+Notre serveur est désormais lancé et en écoute.
+
+Nous n'avons plus qu’à lancer le client LoRa pour cela sur la machine du client nous allons juste démarrer le script "script_boot_rpi" s'y connecter puis mettre en place le serveur Mosquitto et l'esp comme indiqué en partie 3 et 4. Une fois cela fait nous allons démarrer le script "script_ap" depuis le raspberry. Depuis l'hôte nous exécutons depuis le répertoire /my_app/ la commande suivante:
+```
+	$ sudo mos build --local --platform esp8266 && sudo mos flash && sudo mos console
+```
+Notre esp devrait donc se connecter au réseau wifi créé par le Raspberry (scrit_ap).
+Il ne nous reste plus qu'à , depuis le Raspberry, exécuter la commande suivante dans le répertoire /RadioHead/exemples/raspi/rf95/
+```
+	$ make rf95_client && sudo ./rf95_client
+```
+Notre projet est donc désormais fonctionnel.
 </details>
 
 
